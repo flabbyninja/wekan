@@ -1,36 +1,40 @@
-BlazeComponent.extendComponent({
+import MeteorEmoji from 'meteor-emoji';
 
-    onCreated() {
-        super.onCreated();
-        const meteorEmoji = require('meteor-emoji');
-        this.emoji= new meteorEmoji();
-    },
 
-    template() {
-        return 'emojiTextArea';
-    },
+class EmojiTextArea extends BlazeComponent {
+  
+  onCreated() {
+      super.onCreated();
+      const emojiPicker = new MeteorEmoji();
+    }
 
-    value() {
-        const doc = Values.findOne(this.data().id);
-        if (doc) return doc.value;
-    },
+  template() {
+      return 'emojiTextArea';
+    }
 
-    events() {
-        return [{
-            'change input': this.onChange,
-            'click input': this.onClick,
+  value() {
+      const doc = Values.findOne(this.data().id);
+      if (doc) return doc.value;
+    }
+
+  events() {
+      return [{
+          'change input': this.onChange,
+          'click input': this.onClick,
         }];
-    },
+    }
 
-    onChange(event) {
-        Values.upsert(this.data().id, {
-            $set: {
-                value: event.target.value,
+  onChange(event) {
+      Values.upsert(this.data().id, {
+          $set: {
+              value: event.target.value,
             },
         });
-    },
-
-    onClick(event) {
-        $(event.target).select();
     }
-  }).register('EmojiTextArea');
+
+  onClick(event) {
+      $(event.target).select();
+    }
+  }
+
+EmojiTextArea.register('EmojiTextArea');
